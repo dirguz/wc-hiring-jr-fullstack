@@ -37,7 +37,33 @@ import _ from 'lodash'
 const source = $t.source(1)
 $t.answer(1, async () => {
   // Your code goes here
-  return 
+const result={ balance:0,
+  income:0,
+  expenses:0,
+  byCategories: {
+    Restaurants:0,
+    Income:0,
+    Groceries:0,
+    Rent:0
+  }}
+const suma=(arr)=>{return _.reduce(arr, function(sum, n) {
+    return sum + n.amount;
+  }, 0);}
+
+  let suma1= suma(_.filter(source,{type:"income"}))
+  let suma2= suma(_.filter(source,{type:"expense"}))
+  let suma3=suma(_.filter(source,{category:"Restaurants"}))
+  let groceries=_.filter(source,{category:"Groceries"})
+  let rent=_.filter(source,{category:"Rent"})
+
+  result.balance=suma1-suma2
+  result.income=suma1
+  result.expenses=suma2
+  result.byCategories.Restaurants=-suma3
+  result.byCategories.Income=suma1
+  result.byCategories.Groceries=-groceries[0].amount
+  result.byCategories.Rent=-rent[0].amount
+  return result
 })
 
 /*
@@ -53,5 +79,10 @@ $t.answer(2, async () => {
     // 1. Get ids: $source.getIds()
     // 2. Get text for every id: $source.getText(id)
     // 3. Return array of texts
-    return 
+    const arra=[];
+    let result=await $source.getIds()
+    for(let i of result){
+      arra.push(await $source.getText(i))
+    }
+    return arra
 })
